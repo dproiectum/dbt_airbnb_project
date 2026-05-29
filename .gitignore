@@ -1,7 +1,9 @@
-
 target/
 dbt_packages/
 logs/
-../.DS_Store
-../archive/
-../logs/
+archive/
+logs/
+.DS_Store
+uv/.venv/
+.venv/
+venv/
