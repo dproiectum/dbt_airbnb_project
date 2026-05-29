@@ -1,5 +1,9 @@
 WITH raw_hosts as (
-    SELECT * from AIRBNB.RAW.RAW_HOSTS
+    SELECT * 
+    --before : from AIRBNB.RAW.RAW_HOSTS
+    -- apply after adding source.yml to the project
+    FROM {{ source('airbnb', 'hosts') }}
+
 )
 SELECT
   ID as host_id

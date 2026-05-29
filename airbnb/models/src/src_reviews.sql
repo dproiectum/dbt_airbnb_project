@@ -1,7 +1,10 @@
 WITH raw_reviews as (
     SELECT * 
-    from AIRBNB.RAW.RAW_REVIEWS
+    --before : from AIRBNB.RAW.RAW_REVIEWS
+    -- apply after adding source.yml to the project
+    FROM {{ source('airbnb', 'reviews') }}
 )
+
 SELECT
     LISTING_ID
     , DATE as review_date
