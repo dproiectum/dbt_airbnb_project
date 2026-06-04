@@ -3,11 +3,15 @@
 # unique and not null constraints on listing_id and host_id, 
 # as well as a test for accepted values in the room_type column
 
-
 models:
   - name: dim_listings_cleansed     #the name of the model/table/view
+    data_tests:                      #test for the whole model
+      - minimum_row_count_test:               #test name to call
+          arguments:
+            min_row_count_params: 1000         #condition or argument sent to the test parameter 
+          severity: error                        #severity level of the test, if the test fails, it will raise an error and stop the dbt run.
+    
     columns:                        # test column
-
      - name: listing_id             
        data_tests:
          - unique
@@ -30,20 +34,83 @@ models:
                         'Shared room',
                         'Hotel room']
 
+     - name : minimum_nights
+       data_tests :
+          - positive_values_test          
+          #check if the values in the minimum_nights column are positive
+          # when we launch the dbt test, it will run the SQL code in the positive_values.sql file located in the tests/generic directory.
+
+
+
+
+#--- the data contract---
   - name: dim_hosts_cleansed     
+    config:
+      #meaning that the data contract will be enforced (activated)
+      #and any changes to the schema will require a manual review and approval process.
+      contract :
+        enforced: true                
+    
     columns:                        
-
       - name: host_id             
-        data_tests:
-          - unique
-          - not_null
-
+        data_types: integer
       - name: host_name                
-        data_tests:
-          - not_null
+        data_types: string
+      - name: is_superhost              
+        data_types: string
+      - name : update_at
+        data_types: timestamp
+      - name : created_at
+        data_types: timestamp
 
-      - name: IS_SUPERHOST              
+
+#--- this block is for the generic (4 built-in) tests ---
+  # - name: dim_hosts_cleansed     
+  #   columns:                        
+  #     - name: host_id             
+  #       data_tests:
+  #         - unique
+  #         - not_null
+  #     - name: host_name                
+  #       data_tests:
+  #         - not_null
+  #     - name: is_superhost              
+  #       data_tests:
+  #         - accepted_values:         
+  #             arguments:
+  #               values: ['t','f']
+##  ---
+
+  - name: dim_hosts_cleansed     
+  #v47-ex5-v48 : need the data contract to be enforced to activate the generic tests !
+    config:
+      contract :
+        enforced: true
+    
+    constraints:
+      - type: primary_key
+        columns: [host_id]
+
+    columns:                        
+      - name: host_id  
+        data_types: integer     
+        constraints:
+         - type : not_null
+         - type : unique      
+        data_tests: 
+         - not_null
+         - unique
+
+      - name: host_name   
+        data_types: string  
+        constraints:
+         - type : not_null    
+        data_tests: 
+         - not_null
+
+      - name: is_superhost      
+        data_types: string        
         data_tests:
-          - accepted_values:         
+         - accepted_values:         
               arguments:
                 values: ['t','f']
