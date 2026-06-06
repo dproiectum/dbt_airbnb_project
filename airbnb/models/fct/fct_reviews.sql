@@ -15,9 +15,12 @@
 WITH src_reviews as (
     SELECT * FROM {{ ref('src_reviews')}}
 )
-SELECT *
+SELECT 
+    {{ dbt_utils.generate_surrogate_key(['listing_id', 'review_date', 'reviewer_name', 'review_text']) }} AS review_id,
+    *
 FROM src_reviews
 WHERE review_text IS NOT NULL
+
 --add Jinja if statement
 {% if is_incremental() %}
     AND review_date > (SELECT MAX(review_date) FROM {{ this }})

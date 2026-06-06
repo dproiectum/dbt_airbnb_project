@@ -44,24 +44,24 @@ models:
 
 
 #--- the data contract---
-  - name: dim_hosts_cleansed     
-    config:
-      #meaning that the data contract will be enforced (activated)
-      #and any changes to the schema will require a manual review and approval process.
-      contract :
-        enforced: true                
+  # - name: dim_hosts_cleansed     
+  #   config:
+  #     #meaning that the data contract will be enforced (activated)
+  #     #and any changes to the schema will require a manual review and approval process.
+  #     contract :
+  #       enforced: true                
     
-    columns:                        
-      - name: host_id             
-        data_types: integer
-      - name: host_name                
-        data_types: string
-      - name: is_superhost              
-        data_types: string
-      - name : update_at
-        data_types: timestamp
-      - name : created_at
-        data_types: timestamp
+  #   columns:                        
+  #     - name: host_id             
+  #       data_types: integer
+  #     - name: host_name                
+  #       data_types: string
+  #     - name: is_superhost              
+  #       data_types: string
+  #     - name : update_at
+  #       data_types: timestamp
+  #     - name : created_at
+  #       data_types: timestamp
 
 
 #--- this block is for the generic (4 built-in) tests ---
@@ -81,6 +81,7 @@ models:
   #               values: ['t','f']
 ##  ---
 
+#--- dim_hosts_cleansed final : data contract + generic tests ---
   - name: dim_hosts_cleansed     
   #v47-ex5-v48 : need the data contract to be enforced to activate the generic tests !
     config:
